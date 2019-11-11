@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  db:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  spring:
+    build: .
+    pid: "host"
+    volumes:
+      - .:/app
+    command: ["bundle", "exec", "spring", "server"]
+
+  app:
+    build: .
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+

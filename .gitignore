@@ -1,0 +1,11 @@
+.DS_Store
+.idea
+.vscode
+.rakeTasks
+/spec/examples.txt
+/.bundle
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/config/master.key

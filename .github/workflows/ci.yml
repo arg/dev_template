@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:12
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        ports: ['6379:6379']
+        options: --entrypoint redis-server
+    container:
+      image: ruby:2.6.5-alpine
+      env:
+        DATABASE_URL: postgres://postgres:@db:5432/test
+        REDIS_URL: redis://redis:6379/0
+        RAILS_ENV: test
+        DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: apk add --update build-base postgresql-client postgresql-dev tzdata
+      - name: Install gems
+        run: |
+          gem install bundler -v '2.0.2'
+          bundle install --jobs 4 --retry 3
+      - name: Setup database
+        run: bundle exec rails db:setup
+      - name: Run tests
+        run: bundle exec rspec
