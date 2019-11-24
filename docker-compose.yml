@@ -6,7 +6,7 @@ volumes:
 
 services:
   db:
-    image: postgres:12-alpine
+    image: postgres:11.6-alpine
     restart: always
     environment:
       POSTGRES_USER: "postgres"

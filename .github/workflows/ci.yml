@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       db:
-        image: postgres:12
+        image: postgres:11.6-alpine
         ports: ['5432:5432']
         options: >-
           --health-cmd pg_isready
@@ -21,7 +21,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       redis:
-        image: redis
+        image: redis:5.0-alpine
         ports: ['6379:6379']
         options: --entrypoint redis-server
     container:
@@ -35,11 +35,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Install dependencies
-        run: apk add --update build-base postgresql-client postgresql-dev tzdata
+        run: apk add --update build-base postgresql-client=11.6-r0 postgresql-dev=11.6-r0 tzdata
       - name: Install gems
         run: |
           gem install bundler -v '2.0.2'
-          bundle install --jobs 4 --retry 3
+          bundle install --jobs 2 --retry 3
       - name: Setup database
         run: bundle exec rails db:setup
       - name: Run tests

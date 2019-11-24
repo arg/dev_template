@@ -1,0 +1,17 @@
+---
+include:
+- "**/*.rb"
+require:
+- actionmailer
+- actionpack
+- actionview
+- activejob
+- activemodel
+- activerecord
+- activesupport
+domains: []
+reporters:
+- rubocop
+- require_not_found
+require_paths: []
+max_files: 5000

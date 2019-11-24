@@ -2,7 +2,7 @@ FROM ruby:2.6.5-alpine
 
 LABEL maintainer="Andrei Gladkyi <arg@arg.zone>"
 
-RUN apk add --update build-base postgresql-client postgresql-dev tzdata
+RUN apk add --update build-base postgresql-client=11.6-r0 postgresql-dev=11.6-r0 tzdata
 
 COPY . /app
 
@@ -15,7 +15,7 @@ RUN gem install bundler -v '2.0.2'
 RUN if [[ "$RAILS_ENV" == "production" ]]; then \
   bundle install --jobs 2 --retry 5 --without development test; \
 else \
-  bundle install --jobs 2 --retry 5; \
+  bundle install; \
 fi
 
 RUN apk del build-base

@@ -1,0 +1,21 @@
+name: lint
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pronto:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Install Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "2.6"
+      - name: Install gems
+        run: gem install pronto pronto-rubocop rubocop-rails rubocop-rspec rubocop-performance
+      - name: Run Pronto
+        run: PRONTO_PULL_REQUEST_ID="$(jq --raw-output .number "$GITHUB_EVENT_PATH")" PRONTO_GITHUB_ACCESS_TOKEN="${{ secrets.PRONTO_TOKEN }}" pronto run -f github_status github_pr -c origin/master

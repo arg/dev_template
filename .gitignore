@@ -2,6 +2,7 @@
 .idea
 .vscode
 .rakeTasks
+.rubocop-https*
 /spec/examples.txt
 /.bundle
 /log/*
