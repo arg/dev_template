@@ -3,6 +3,8 @@ version: '3'
 volumes:
   postgres_data:
     driver: local
+  gems_data:
+    driver: local
 
 services:
   db:
@@ -26,6 +28,7 @@ services:
     pid: "host"
     volumes:
       - .:/app
+      - gems_data:/usr/local/bundle
     command: ["bundle", "exec", "spring", "server"]
 
   app:
@@ -39,4 +42,4 @@ services:
       - "3000:3000"
     volumes:
       - .:/app
-
+      - gems_data:/usr/local/bundle
